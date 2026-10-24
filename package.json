@@ -1,0 +1,19 @@
+{
+  "name": "re-track",
+  "version": "1.0.0",
+  "description": "RE-TRACK — Personal Habit Tracker & To-Do Application",
+  "main": "app.js",
+  "scripts": {
+    "start": "npx serve .",
+    "test": "node --check app.js"
+  },
+  "keywords": [
+    "habit-tracker",
+    "task-manager",
+    "productivity",
+    "dashboard",
+    "vanilla-js"
+  ],
+  "author": "digantamukherjee-19",
+  "license": "MIT"
+}

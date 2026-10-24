@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RE-TRACK — Personal Habit Tracker & To-Do Application</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=Playfair+Display:ital,wght@1,500;1,600;1,700&display=swap" rel="stylesheet">
+  <!-- Preload background images to prevent flickering on theme switch -->
+  <link rel="preload" as="image" href="assets/lightmode.jpg">
+  <link rel="preload" as="image" href="assets/darkmode.jpg">
+  <link rel="preload" as="image" href="assets/logo.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-theme="light">
+  <!-- Fixed Navigation Bar -->
+  <header class="navbar" id="navbar">
+    <div class="nav-container">
+      <div class="brand">
+        <img src="assets/logo.png" alt="RE-TRACK Logo" class="brand-logo-img">
+        <span class="brand-name">RE-TRACK</span>
+      </div>
+
+      <nav class="nav-tabs" role="tablist" aria-label="Main Navigation">
+        <button class="nav-tab active" id="tab-btn-home" role="tab" aria-selected="true" aria-controls="tab-home" data-tab="home">
+          HOME
+        </button>
+        <button class="nav-tab" id="tab-btn-list" role="tab" aria-selected="false" aria-controls="tab-list" data-tab="list">
+          LIST
+        </button>
+        <button class="nav-tab" id="tab-btn-tracker" role="tab" aria-selected="false" aria-controls="tab-tracker" data-tab="tracker">
+          TRACKER
+        </button>
+      </nav>
+
+      <div class="nav-actions">
+        <button id="theme-toggle-btn" class="theme-toggle" aria-label="Toggle dark and light theme" title="Toggle theme">
+          <svg class="theme-icon sun-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg class="theme-icon moon-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Notification Banner / Alert Box -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- Main Content Area -->
+  <main class="app-main">
+    
+    <!-- ==================== HOME TAB ==================== -->
+    <section id="tab-home" class="tab-pane active" role="tabpanel" aria-labelledby="tab-btn-home">
+      <div class="container home-container">
+        
+        <!-- Brand Identity: Logo + Project Name -->
+        <div class="home-brand-header">
+          <div class="home-brand-badge">
+            <img src="assets/logo.png" alt="RE-TRACK Official Logo" class="home-brand-logo">
+            <span class="home-brand-title">RE-TRACK</span>
+          </div>
+        </div>
+
+        <!-- Editable Username Section -->
+        <div class="user-greeting-wrapper">
+          <div class="user-name-display" id="user-name-container">
+            <span class="user-prefix">Hello,</span>
+            <span class="user-name" id="user-name-text" title="Click to edit username">USERNAME</span>
+            <button class="edit-name-btn" id="edit-name-btn" aria-label="Edit username" title="Edit username">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+              </svg>
+            </button>
+          </div>
+          <form class="user-name-form hidden" id="user-name-form">
+            <input type="text" id="user-name-input" class="user-name-input" maxlength="32" placeholder="Enter your name" aria-label="Username">
+            <div class="user-name-form-actions">
+              <button type="submit" class="btn btn-sm btn-primary">Save</button>
+              <button type="button" class="btn btn-sm btn-ghost" id="cancel-name-btn">Cancel</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Main Prominent Heading -->
+        <div class="hero-header">
+          <h1 class="main-heading">Re-Track Your Life.....</h1>
+          <p class="hero-subtext">Stay consistent with mindful habits, purposeful tasks, and measurable growth.</p>
+        </div>
+
+        <!-- Stylish Monthly Selector -->
+        <div class="month-selector-card">
+          <div class="selector-header">
+            <span class="selector-label">Focus Period</span>
+            <span class="selector-badge" id="home-month-display">January 2026</span>
+          </div>
+          <div class="month-selector-controls">
+            <button class="nav-arrow-btn" id="home-prev-month" aria-label="Previous month" title="Previous month">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </button>
+
+            <div class="dropdown-group">
+              <label for="home-month-select" class="sr-only">Select Month</label>
+              <select id="home-month-select" class="styled-select month-select" aria-label="Select month">
+                <option value="0">January</option>
+                <option value="1">February</option>
+                <option value="2">March</option>
+                <option value="3">April</option>
+                <option value="4">May</option>
+                <option value="5">June</option>
+                <option value="6">July</option>
+                <option value="7">August</option>
+                <option value="8">September</option>
+                <option value="9">October</option>
+                <option value="10">November</option>
+                <option value="11">December</option>
+              </select>
+
+              <label for="home-year-select" class="sr-only">Select Year</label>
+              <select id="home-year-select" class="styled-select year-select" aria-label="Select year">
+                <!-- Dynamically populated -->
+              </select>
+            </div>
+
+            <button class="nav-arrow-btn" id="home-next-month" aria-label="Next month" title="Next month">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
+
+            <button class="btn btn-sm btn-ghost current-month-btn" id="home-today-btn">Current Month</button>
+          </div>
+        </div>
+
+        <!-- Monthly Statistics Cards -->
+        <div class="stats-grid">
+          <!-- Stat 1: Targets Given -->
+          <div class="stat-card">
+            <div class="stat-icon-wrapper icon-blue">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <circle cx="12" cy="12" r="6"></circle>
+                <circle cx="12" cy="12" r="2"></circle>
+              </svg>
+            </div>
+            <div class="stat-content">
+              <span class="stat-title">Targets Given</span>
+              <div class="stat-value" id="stat-targets-given">Targets Given: 0</div>
+              <p class="stat-caption">Total tasks assigned to this month</p>
+            </div>
+          </div>
+
+          <!-- Stat 2: Targets Completed -->
+          <div class="stat-card">
+            <div class="stat-icon-wrapper icon-green">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+            </div>
+            <div class="stat-content">
+              <span class="stat-title">Targets Completed</span>
+              <div class="stat-value" id="stat-targets-completed">Targets Completed: 0</div>
+              <p class="stat-caption" id="stat-task-rate">0% completed</p>
+            </div>
+          </div>
+
+          <!-- Stat 3: Habits Tracked -->
+          <div class="stat-card">
+            <div class="stat-icon-wrapper icon-purple">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path>
+              </svg>
+            </div>
+            <div class="stat-content">
+              <span class="stat-title">Habits Tracked</span>
+              <div class="stat-value" id="stat-habits-tracked">Habits Tracked: 0%</div>
+              <p class="stat-caption" id="stat-habits-count">Based on active habit-days</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Navigation Jump Cards -->
+        <div class="quick-jump-section">
+          <div class="quick-card" data-jump="list">
+            <div class="quick-card-text">
+              <h3>Task Management</h3>
+              <p>Add new targets, set reminders, and mark your deliverables.</p>
+            </div>
+            <span class="quick-link">Go to List &rarr;</span>
+          </div>
+          <div class="quick-card" data-jump="tracker">
+            <div class="quick-card-text">
+              <h3>Habit Matrix</h3>
+              <p>Check off daily routines and observe your consistency circle.</p>
+            </div>
+            <span class="quick-link">Go to Tracker &rarr;</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==================== LIST TAB ==================== -->
+    <section id="tab-list" class="tab-pane" role="tabpanel" aria-labelledby="tab-btn-list">
+      <div class="container list-container">
+        
+        <!-- Header & Action Bar -->
+        <div class="section-header-bar">
+          <div>
+            <h2 class="section-title">Task Management</h2>
+            <p class="section-subtitle">Set monthly targets, track milestones, and trigger browser reminders.</p>
+          </div>
+          <div class="section-header-actions">
+            <button class="btn btn-secondary notification-perm-btn" id="request-perm-btn" title="Enable browser alerts">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              </svg>
+              <span id="perm-btn-text">Enable Notifications</span>
+            </button>
+            <button class="btn btn-primary" id="open-add-task-btn">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              Add Task
+            </button>
+          </div>
+        </div>
+
+        <!-- LIST Month and Year Selector Card -->
+        <div class="month-selector-card list-month-selector-card">
+          <div class="selector-header">
+            <span class="selector-label">Target Period</span>
+            <span class="selector-badge" id="list-month-display">January 2026</span>
+          </div>
+
+          <div class="month-selector-controls">
+            <button class="nav-arrow-btn" id="list-prev-month" aria-label="Previous month" title="Previous month">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </button>
+
+            <div class="dropdown-group">
+              <label for="list-month-select" class="sr-only">Select Task Month</label>
+              <select id="list-month-select" class="styled-select month-select" aria-label="Select task month">
+                <option value="0">January</option>
+                <option value="1">February</option>
+                <option value="2">March</option>
+                <option value="3">April</option>
+                <option value="4">May</option>
+                <option value="5">June</option>
+                <option value="6">July</option>
+                <option value="7">August</option>
+                <option value="8">September</option>
+                <option value="9">October</option>
+                <option value="10">November</option>
+                <option value="11">December</option>
+              </select>
+
+              <label for="list-year-select" class="sr-only">Select Task Year</label>
+              <select id="list-year-select" class="styled-select year-select" aria-label="Select task year">
+                <!-- Dynamically populated -->
+              </select>
+            </div>
+
+            <button class="nav-arrow-btn" id="list-next-month" aria-label="Next month" title="Next month">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
+
+            <button class="btn btn-sm btn-ghost current-month-btn" id="list-today-btn">Current Month</button>
+          </div>
+        </div>
+
+        <!-- Notification Info Alert -->
+        <div class="notification-status-banner hidden" id="notification-banner">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+          <span id="notification-banner-text">Browser reminders require notification permission. Note: browser notifications alert while this application is open or in an active tab.</span>
+          <button class="banner-close-btn" id="close-notif-banner" aria-label="Close notification message">&times;</button>
+        </div>
+
+        <!-- Filters & Status Toolbar -->
+        <div class="task-toolbar">
+          <div class="filter-group">
+            <button class="filter-chip active" data-filter="all">All (<span id="count-all">0</span>)</button>
+            <button class="filter-chip" data-filter="active">Active (<span id="count-active">0</span>)</button>
+            <button class="filter-chip" data-filter="completed">Completed (<span id="count-completed">0</span>)</button>
+          </div>
+
+          <div class="list-period-summary">
+            <span class="list-summary-text" id="list-tasks-summary">Showing tasks for selected period</span>
+          </div>
+        </div>
+
+        <!-- Task List Container -->
+        <div class="tasks-wrapper" id="tasks-list" role="list">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- Empty State for Tasks -->
+        <div class="empty-state hidden" id="tasks-empty-state">
+          <div class="empty-state-icon">
+            <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+          </div>
+          <h3 class="empty-title">No tasks found</h3>
+          <p class="empty-desc">Create your first target or task to organize your productivity and schedule reminders.</p>
+          <button class="btn btn-primary" id="empty-add-task-btn">Create a Task</button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==================== TRACKER TAB ==================== -->
+    <section id="tab-tracker" class="tab-pane" role="tabpanel" aria-labelledby="tab-btn-tracker">
+      <div class="container tracker-container">
+        
+        <!-- Tracker Top Bar: Month & Year Selector + Add Habit -->
+        <div class="tracker-header-bar">
+          <div class="tracker-header-title">
+            <h2 class="section-title">Monthly Habit Tracker</h2>
+            <p class="section-subtitle">Cultivate discipline one day at a time without clutter.</p>
+          </div>
+
+          <div class="tracker-controls-group">
+            <div class="month-selector-controls">
+              <button class="nav-arrow-btn" id="tracker-prev-month" aria-label="Previous month" title="Previous month">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+              </button>
+
+              <div class="dropdown-group">
+                <select id="tracker-month-select" class="styled-select month-select" aria-label="Select tracker month">
+                  <option value="0">January</option>
+                  <option value="1">February</option>
+                  <option value="2">March</option>
+                  <option value="3">April</option>
+                  <option value="4">May</option>
+                  <option value="5">June</option>
+                  <option value="6">July</option>
+                  <option value="7">August</option>
+                  <option value="8">September</option>
+                  <option value="9">October</option>
+                  <option value="10">November</option>
+                  <option value="11">December</option>
+                </select>
+
+                <select id="tracker-year-select" class="styled-select year-select" aria-label="Select tracker year">
+                  <!-- Dynamically populated -->
+                </select>
+              </div>
+
+              <button class="nav-arrow-btn" id="tracker-next-month" aria-label="Next month" title="Next month">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </button>
+            </div>
+
+            <button class="btn btn-primary" id="open-add-habit-btn">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              Add Habit
+            </button>
+          </div>
+        </div>
+
+        <!-- Two-Part Desktop Layout: Left Chart, Right Habit Table -->
+        <div class="tracker-layout">
+          
+          <!-- Left Side: Circular Progress Chart -->
+          <aside class="tracker-chart-panel">
+            <div class="chart-card">
+              <div class="chart-header">
+                <span class="chart-title">Monthly Progress</span>
+                <span class="chart-month-badge" id="chart-month-badge">January 2026</span>
+              </div>
+
+              <div class="chart-visual-wrapper">
+                <svg class="doughnut-chart-svg" viewBox="0 0 200 200" width="180" height="180" aria-label="Monthly habit progress doughnut chart">
+                  <!-- Background circle track -->
+                  <circle class="chart-bg-circle" cx="100" cy="100" r="78" stroke-width="18" fill="transparent"></circle>
+                  <!-- Animated progress circle -->
+                  <circle class="chart-progress-circle" id="chart-progress-circle" cx="100" cy="100" r="78" stroke-width="18" fill="transparent" stroke-linecap="round" stroke-dasharray="490" stroke-dashoffset="490"></circle>
+                </svg>
+
+                <div class="chart-center-content">
+                  <span class="chart-percentage" id="chart-percentage-text">0%</span>
+                  <span class="chart-sublabel">Completed</span>
+                </div>
+              </div>
+
+              <div class="chart-legend">
+                <div class="legend-row">
+                  <span class="legend-dot dot-completed"></span>
+                  <span class="legend-label">Completed Habit-Days:</span>
+                  <strong class="legend-val" id="chart-completed-count">0</strong>
+                </div>
+                <div class="legend-row">
+                  <span class="legend-dot dot-remaining"></span>
+                  <span class="legend-label">Remaining Habit-Days:</span>
+                  <strong class="legend-val" id="chart-remaining-count">0</strong>
+                </div>
+                <div class="legend-row total-row">
+                  <span class="legend-label">Total Applicable:</span>
+                  <strong class="legend-val" id="chart-total-count">0</strong>
+                </div>
+              </div>
+
+              <div class="chart-quote-box">
+                <p class="chart-quote" id="chart-motivational-quote">"Small daily improvements over time lead to stunning results."</p>
+              </div>
+            </div>
+          </aside>
+
+          <!-- Right Side: Monthly Habit Grid Table (No visible borders) -->
+          <section class="tracker-table-panel">
+            <div class="table-card">
+              <div class="table-card-top">
+                <div class="table-meta">
+                  <span class="table-meta-title" id="table-period-name">January 2026</span>
+                  <span class="table-meta-subtitle" id="table-habits-summary">0 habits registered</span>
+                </div>
+                <div class="table-legend-hints">
+                  <span class="hint-item"><span class="hint-box today-hint"></span> Today</span>
+                  <span class="hint-item"><span class="hint-box checked-hint"></span> Done</span>
+                </div>
+              </div>
+
+              <!-- Habit Table Container (Horizontal Scrollable) -->
+              <div class="table-scroll-container" id="tracker-table-container">
+                <table class="habit-table" id="habit-table">
+                  <thead id="habit-table-head">
+                    <!-- Populated dynamically: Habit Name Col + 1..31 Date Cols + Action Col -->
+                  </thead>
+                  <tbody id="habit-table-body">
+                    <!-- Populated dynamically -->
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Empty State for Habits -->
+              <div class="empty-state hidden" id="habits-empty-state">
+                <div class="empty-state-icon">
+                  <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                  </svg>
+                </div>
+                <h3 class="empty-title">No habits created yet</h3>
+                <p class="empty-desc">Add routines like "Morning Meditation", "Read 20 mins", or "Workout" to track daily consistency.</p>
+                <button class="btn btn-primary" id="empty-add-habit-btn">Add Your First Habit</button>
+              </div>
+
+            </div>
+          </section>
+
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== MODALS / DIALOGS ==================== -->
+
+  <!-- Add / Edit Task Modal -->
+  <div class="modal-backdrop hidden" id="task-modal" role="dialog" aria-modal="true" aria-labelledby="task-modal-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title" id="task-modal-title">Add New Target / Task</h3>
+        <button class="modal-close-btn" id="close-task-modal-btn" aria-label="Close dialog">&times;</button>
+      </div>
+
+      <form id="task-form" class="modal-form" novalidate>
+        <input type="hidden" id="task-id-input" value="">
+
+        <div class="form-group">
+          <label for="task-title-input" class="form-label">Task Title <span class="required">*</span></label>
+          <input type="text" id="task-title-input" class="form-input" placeholder="e.g., Complete Quarter Financial Audit" required maxlength="120">
+          <div class="form-error hidden" id="task-title-error">Task title is required.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="task-desc-input" class="form-label">Description <span class="optional">(Optional)</span></label>
+          <textarea id="task-desc-input" class="form-textarea" rows="3" placeholder="Add specific milestones or notes..."></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-half">
+            <label for="task-date-input" class="form-label">Target / Due Date <span class="required">*</span></label>
+            <input type="date" id="task-date-input" class="form-input" required>
+            <div class="form-error hidden" id="task-date-error">A valid target date is required.</div>
+          </div>
+
+          <div class="form-group col-half">
+            <label for="task-reminder-input" class="form-label">Reminder Date & Time <span class="optional">(Optional)</span></label>
+            <input type="datetime-local" id="task-reminder-input" class="form-input">
+            <span class="form-hint">Triggers browser notification when due</span>
+          </div>
+        </div>
+
+        <div class="form-group form-checkbox-group">
+          <label class="custom-checkbox-label">
+            <input type="checkbox" id="task-completed-input" class="custom-checkbox-input">
+            <span class="custom-checkbox-box"></span>
+            <span class="checkbox-text">Mark as completed already</span>
+          </label>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-ghost" id="cancel-task-btn">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="save-task-btn">Save Task</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add Habit Modal -->
+  <div class="modal-backdrop hidden" id="habit-modal" role="dialog" aria-modal="true" aria-labelledby="habit-modal-title">
+    <div class="modal-card modal-sm">
+      <div class="modal-header">
+        <h3 class="modal-title" id="habit-modal-title">Add New Daily Habit</h3>
+        <button class="modal-close-btn" id="close-habit-modal-btn" aria-label="Close dialog">&times;</button>
+      </div>
+
+      <form id="habit-form" class="modal-form" novalidate>
+        <div class="form-group">
+          <label for="habit-name-input" class="form-label">Habit Name <span class="required">*</span></label>
+          <input type="text" id="habit-name-input" class="form-input" placeholder="e.g., Drink 2.5L Water, Morning Walk, Journaling" required maxlength="60">
+          <div class="form-error hidden" id="habit-name-error">Habit name cannot be empty.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="habit-category-input" class="form-label">Category / Color Accent <span class="optional">(Optional)</span></label>
+          <select id="habit-category-input" class="styled-select w-full">
+            <option value="wellness">Wellness & Health</option>
+            <option value="productivity">Work & Productivity</option>
+            <option value="mindfulness">Mindfulness & Learning</option>
+            <option value="fitness">Sports & Fitness</option>
+            <option value="routine">Daily Routine</option>
+          </select>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-ghost" id="cancel-habit-btn">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="save-habit-btn">Create Habit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Confirmation Modal (For Deleting Tasks & Habits) -->
+  <div class="modal-backdrop hidden" id="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="confirm-modal-title">
+    <div class="modal-card modal-sm">
+      <div class="modal-header">
+        <h3 class="modal-title" id="confirm-modal-title">Confirm Deletion</h3>
+        <button class="modal-close-btn" id="close-confirm-modal-btn" aria-label="Close dialog">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <p id="confirm-modal-message" class="confirm-message">Are you sure you want to delete this item? This action cannot be undone.</p>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" id="confirm-cancel-btn">Cancel</button>
+        <button type="button" class="btn btn-danger" id="confirm-proceed-btn">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Audio element for subtle notification chime if desired -->
+  <audio id="notification-sound" preload="none">
+    <source src="data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU"+Array(200).join("A") type="audio/wav">
+  </audio>
+
+  <!-- Application Logic -->
+  <script src="app.js"></script>
+</body>
+</html>
