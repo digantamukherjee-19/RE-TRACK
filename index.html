@@ -14,6 +14,12 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body data-theme="light">
+  <!-- Interactive Dynamic Cybernetic Cursor Glow -->
+  <div id="cursor-glow" class="cursor-glow" aria-hidden="true"></div>
+
+  <!-- Fullscreen 3D Canvas Background (WebGL / Three.js) -->
+  <canvas id="webgl-canvas" class="webgl-canvas" aria-hidden="true"></canvas>
+
   <!-- Fixed Navigation Bar -->
   <header class="navbar" id="navbar">
     <div class="nav-container">
@@ -604,7 +610,18 @@
     <source src="data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU"+Array(200).join("A") type="audio/wav">
   </audio>
 
-  <!-- Application Logic -->
+  <!-- Core Application Logic (Preserved 100%) -->
   <script src="app.js"></script>
+
+  <!-- Vendor Libraries: GSAP + Lenis -->
+  <script src="vendor/gsap.min.js"></script>
+  <script src="vendor/ScrollTrigger.min.js"></script>
+  <script src="vendor/lenis.min.js"></script>
+
+  <!-- 3D Three.js Module Controller -->
+  <script type="module" src="scene3d.js"></script>
+
+  <!-- Motion & Micro-Interactions Controller -->
+  <script src="motion.js"></script>
 </body>
 </html>
